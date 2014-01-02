@@ -1,0 +1,18 @@
+#!/bin/bash
+#$ -V
+#$ -cwd
+#$ -N matrix_comparison
+#$ -j n
+#$ -o matrix_comparison.stdout
+#$ -A Chlamydomonas_genomi
+#$ -pe 12way 12
+#$ -q development
+#$ -l h_rt=0:30:00
+module load python
+
+D1=$SCRATCH/Chlamy_RAD_SAM/vcfs/GATK_recal_vcfs
+D2=$SCRATCH/inhouse
+OD=$SCRATCH/Chlamy_RAD_SAM/vcfs
+
+python CompareGenotypeMatrices.py $D1/Cre_wt_GATKrecal_all_loci.tab $D2/Cre_inhouse_filtered.tab > $OD/GATKrecal_vs_inhouse.out
+

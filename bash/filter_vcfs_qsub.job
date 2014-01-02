@@ -1,0 +1,13 @@
+#!/bin/bash
+#$ -V
+#$ -cwd
+#$ -N vcfs_filter
+#$ -j n
+#$ -o vcfs_filter.stdout
+#$ -A Chlamydomonas_genomi
+#$ -pe 12way 12
+#$ -q development
+#$ -l h_rt=0:10:00
+#----------------------------------
+module load python
+python FilterVCFHaploid.py 30 filtered_vcfs

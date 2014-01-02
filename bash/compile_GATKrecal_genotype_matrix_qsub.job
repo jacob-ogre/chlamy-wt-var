@@ -1,0 +1,19 @@
+#!/bin/bash
+#$ -V
+#$ -cwd
+#$ -N GATKrecal_compile
+#$ -j n
+#$ -o GATKrecal_compile.stdout
+#$ -A Daphnia_genomics
+#$ -pe 12way 12
+#$ -q development
+#$ -l h_rt=0:30:00
+module load python
+
+DAT=$WORK/Chlamy/Chlamy_wt_data/RAD_archive/temp
+COD=$WORK/Chlamy/other_py_code
+
+cd $DAT
+python $COD/ExtractGATKGenotypeMatrix.py Cre_wt_GATKrecal_all_loci_rev.tab \
+    Cre_wt_GATKrecal_poly_loci_rev.tab 0.75 Cre_wt_GATKrecal_poly75_loci_rev.tab \
+    Cre_wt_GATKrecal_all_lines_typed_poly_rev.tab

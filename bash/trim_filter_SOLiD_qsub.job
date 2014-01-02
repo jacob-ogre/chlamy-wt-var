@@ -1,0 +1,17 @@
+#!/bin/bash
+#$ -V
+#$ -cwd
+#$ -N check_contam
+#$ -j n
+#$ -o check_contam.stdout
+#$ -A Daphnia_genomics
+#$ -pe 1way 12
+#$ -q development
+#$ -l h_rt=0:30:00
+date
+module load python
+cd $WORK/chlamy-mapping-population/Python/C3RMP/
+WORKDIR=$WORK/Chlamy/C3RMP
+
+python CheckContamination.py $WORKDIR/recal-Q20-full-C3RMP.vcf $WORKDIR
+date

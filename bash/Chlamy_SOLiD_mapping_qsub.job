@@ -1,0 +1,12 @@
+#!/bin/bash
+#$ -V
+#$ -cwd
+#$ -N Chlamy_2938_SOLiD
+#$ -j n
+#$ -o Chlamy_2938_SOLiD.stdout
+#$ -A Chlamydomonas_genomi
+#$ -pe 12way 48
+#$ -q development
+#$ -l h_rt=0:30:00
+$WORK/SHRiMP_2_2_3/bin/gmapper-cs -N 48 -o 10 --local $WORK/Chlamy/Chlamy_wt_data/csfasta/RAD_filtered/Cr_2938_bcg_filtered.csfasta -L $WORK/Chlamy/Chlamy_ref_data/Chlamy_genome_projection_cs/Chlamy_genome_projection_cs > $WORK/Chlamy/RAD_testing/Cr_2938_bcg.gmap
+echo "Finished mapping"

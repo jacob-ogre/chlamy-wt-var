@@ -1,0 +1,16 @@
+#!/bin/bash
+#$ -V
+#$ -cwd
+#$ -N index_SAM
+#$ -j n
+#$ -o index_SAM.stdout
+#$ -A Chlamydomonas_genomi
+#$ -pe 12way 12
+#$ -q development
+#$ -l h_rt=0:10:00
+#----------------------------------
+
+SAMTL=$WORK/samtools
+CRREF=$WORK/Chlamy/Chlamy_ref_data
+
+$SAMTL/samtools faidx $WORK/Chlamy/Chlamy_ref_data/Cre_comp_ref.fa

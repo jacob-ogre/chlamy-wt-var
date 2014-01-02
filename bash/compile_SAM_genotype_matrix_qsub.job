@@ -1,0 +1,18 @@
+#!/bin/bash
+#$ -V
+#$ -cwd
+#$ -N SAM_compile
+#$ -j n
+#$ -o SAM_compile.stdout
+#$ -A Chlamydomonas_genomi
+#$ -pe 12way 12
+#$ -q development
+#$ -l h_rt=0:30:00
+module load python
+
+DAT=$SCRATCH/Chlamy_RAD_SAM/vcfs/SAM_vcfs
+
+cd $DAT
+python CompileAllSAMGenotypes.py Cre_wt_SAM_all_loci.tab \
+    Cre_wt_SAM_poly_loci.tab 0.75 Cre_wt_SAM_poly75_loci.tab \
+    Cre_wt_SAM_all_lines_typed_poly.tab

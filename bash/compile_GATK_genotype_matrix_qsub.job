@@ -1,0 +1,18 @@
+#!/bin/bash
+#$ -V
+#$ -cwd
+#$ -N GATK_compile
+#$ -j n
+#$ -o GATK_compile.stdout
+#$ -A Chlamydomonas_genomi
+#$ -pe 12way 12
+#$ -q development
+#$ -l h_rt=0:30:00
+module load python
+
+DAT=$SCRATCH/Chlamy_RAD_SAM/vcfs/GATK_vcfs
+
+cd $DAT
+python ExtractGATKGenotypeMatrix.py Cre_wt_GATK_all_loci.tab \
+    Cre_wt_GATK_poly_loci.tab 0.75 Cre_wt_GATK_poly75_loci.tab \
+    Cre_wt_GATK_all_lines_typed_poly.tab
