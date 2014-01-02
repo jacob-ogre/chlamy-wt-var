@@ -126,3 +126,6 @@ summary(mod2937)
 ###########################################################################
 outf <- paste(base, "extracted_data/GxE_blups_rev.tab", sep="")
 write.table(tab.gxe, outf, sep = "\t", quote=FALSE, row.names=TRUE)
+
+outf <- paste(base, "extracted_data/GxE_blups_rev.tab", sep="")
+write.table(new_gxe, outf, sep = "\t", quote=FALSE, row.names=TRUE)
