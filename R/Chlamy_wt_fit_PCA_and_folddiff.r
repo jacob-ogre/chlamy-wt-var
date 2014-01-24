@@ -44,26 +44,60 @@ cv <- function(x){
 ###########################################################################
 # Load data
 ###########################################################################
-gcor.dat <- read.table("Chlamy_wt_max_linemeans.csv", sep=",", header=TRUE)
+# gcor.dat <- read.table("wt_fitness_maxF_FINAL.tab", sep="\t", header=TRUE)
+dat <- read.table("wt_fitness_maxF_FINAL.tab", sep="\t", header=TRUE)
 
 # remove N++100, which is synonymous with N++
 gcor.dat <- gcor.dat[,-7]
 
+###############################################################################
+# calculate line means
+###############################################################################
+means <- data.frame(t(tapply(dat$Fluor, 
+                             INDEX=list(dat$Env, dat$Line), 
+                             FUN=mean)))
+gcor.dat <- means[,-15]
+head(means)
+
+write.table(gcor.dat, 
+            file="wt_fitness_max_MEANS_FINAL.tab",
+            sep="\t",
+            quote=FALSE)
+
 ###########################################################################
 # PCA of genotypic values
 ###########################################################################
-gen_pca <- PCA(gcor.dat[,2:length(gcor.dat)])
+gen_pca <- PCA(gcor.dat)
 dim_des <- dimdesc(gen_pca, axes=1:5)
-pca_axs <- data.frame(gcor.dat[,1], gen_pca$ind$coord[,1:2])
+pca_axs <- data.frame(gen_pca$ind$coord[,1:2])
 
 write.table(pca_axs,
-            file="wt_var_Gmat_PCs.tab",
+            file="wt_var_Gmat_PCs_FINAL.tab",
             sep="\t",
+            quote=FALSE,
             eol="\n")
 
 boot_res <- boot_pca(gcor.dat[,2:length(gcor.dat)], 9999)
 rowSums(boot_res[,2:length(boot_res)])
 
+#############################    
+# check factoMineR against manual:
+a <- cor(means, use="pairwise")
+a_eig <- eigen(a)
+a_var <- a_eig$values / sum(a_eig$values)
+
+c <- scale(gcor.dat)
+d <- cov(c, use="pairwise")
+d_eig <- eigen(d)
+d_var <- d_eig$values / sum(d_eig$values)
+
+a_var
+d_var
+gen_pca$eig$`percentage of variance`
+
+###############################################################################
+# Plot the PCA
+###############################################################################
 fig_base <- "~/Dropbox/writings/mss/Chlamydomonas/Wild-type_variation/Figures/"
 fig_file <- paste(fig_base, "fitness_PCA.pdf", sep="")
 
