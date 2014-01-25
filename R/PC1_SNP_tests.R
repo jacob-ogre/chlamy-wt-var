@@ -38,5 +38,17 @@ rownames(SNP_dat)
 ###############################################################################
 res <- rep(0.0, length(SNP_dat) - 1)
 for(i in 2:length(SNP_dat)) {
+    a_mod <- lm(PCs_dat$Dim.1 ~ SNP_dat[,i-1])
+    a_aov <- aov(a_mod)
+    res[i-1] <- summary(a_aov)[[1]][5][[1]][1]
+}
+results <- data.frame(colnames(SNP_dat)[2:length(SNP_dat)], res)
+colnames(results) <- c("SNP", "p.val")
+nom_sig <- subset(results, results$p.val < 0.05)
+nom_sig
 
-
+outf <- paste(base, "Chlamy_wt_fitness_assays/sig_SNPs.tab", sep="")
+write.table(nom_sig,
+            outf,
+            sep="\t",
+            quote=FALSE)
