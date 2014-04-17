@@ -16,8 +16,8 @@
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 library("FactoMineR")
-setwd(paste("~/Dropbox/Chlamy_project/Chlamy_wt_fitness_assays/", 
-            "extracted_data/", sep=""))
+# setwd(paste("~/Google Drive/Chlamy_project/Chlamy_wt_fitness_assays/", 
+#             "extracted_data/", sep=""))
 
 ###########################################################################
 # Functions
@@ -41,14 +41,24 @@ cv <- function(x){
     return (100*sd(x) / mean(x))
 }
 
+eff_evolv <- function(x) {
+    tmp <- sum(x) / max(x)
+    return(tmp)
+}
+
+max_evolv <- function(x) {
+    tmp <- sqrt(max(x))
+}
+
 ###########################################################################
 # Load data
 ###########################################################################
 # gcor.dat <- read.table("wt_fitness_maxF_FINAL.tab", sep="\t", header=TRUE)
 dat <- read.table("wt_fitness_maxF_FINAL.tab", sep="\t", header=TRUE)
+head(dat)
 
 # remove N++100, which is synonymous with N++
-gcor.dat <- gcor.dat[,-7]
+gcor.dat <- dat[,-7]
 
 ###############################################################################
 # calculate line means
@@ -56,8 +66,10 @@ gcor.dat <- gcor.dat[,-7]
 means <- data.frame(t(tapply(dat$Fluor, 
                              INDEX=list(dat$Env, dat$Line), 
                              FUN=mean)))
-gcor.dat <- means[,-15]
 head(means)
+
+gcor.dat <- means[,-15]
+head(gcor.dat)
 
 write.table(gcor.dat, 
             file="wt_fitness_max_MEANS_FINAL.tab",
@@ -71,6 +83,10 @@ gen_pca <- PCA(gcor.dat)
 dim_des <- dimdesc(gen_pca, axes=1:5)
 pca_axs <- data.frame(gen_pca$ind$coord[,1:2])
 
+gen_pca2 <- PCA(gcor.dat, scale.unit=FALSE)
+dim_des2 <- dimdesc(gen_pca, axes=1:5)
+pca_axs2 <- data.frame(gen_pca$ind$coord[,1:2])
+
 write.table(pca_axs,
             file="wt_var_Gmat_PCs_FINAL.tab",
             sep="\t",
@@ -82,7 +98,7 @@ rowSums(boot_res[,2:length(boot_res)])
 
 #############################    
 # check factoMineR against manual:
-a <- cor(means, use="pairwise")
+a <- cov(gcor.dat, use="pairwise")
 a_eig <- eigen(a)
 a_var <- a_eig$values / sum(a_eig$values)
 
@@ -94,6 +110,9 @@ d_var <- d_eig$values / sum(d_eig$values)
 a_var
 d_var
 gen_pca$eig$`percentage of variance`
+gen_pca2$eig$`percentage of variance`
+
+gen_pca_eff_evolv <- 
 
 ###############################################################################
 # Plot the PCA
