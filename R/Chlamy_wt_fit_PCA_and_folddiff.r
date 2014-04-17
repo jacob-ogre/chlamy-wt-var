@@ -48,6 +48,7 @@ eff_evolv <- function(x) {
 
 max_evolv <- function(x) {
     tmp <- sqrt(max(x))
+    return(tmp)
 }
 
 ###########################################################################
@@ -102,7 +103,7 @@ a <- cov(gcor.dat, use="pairwise")
 a_eig <- eigen(a)
 a_var <- a_eig$values / sum(a_eig$values)
 
-c <- scale(gcor.dat)
+c <- t(t(gcor.dat) / colMeans(gcor.dat, na.rm=T))
 d <- cov(c, use="pairwise")
 d_eig <- eigen(d)
 d_var <- d_eig$values / sum(d_eig$values)
@@ -112,7 +113,24 @@ d_var
 gen_pca$eig$`percentage of variance`
 gen_pca2$eig$`percentage of variance`
 
-gen_pca_eff_evolv <- 
+# calculated eff
+cor_pca_eff_dims <- eff_evolv(gen_pca$eig[,1])
+cov_pca_eff_dims <- eff_evolv(gen_pca2$eig[,1])
+cov_eig_eff_dims <- eff_evolv(a_eig$values)
+cor_eig_eff_dims <- eff_evolv(d_eig$values)
+cor_pca_eff_dims
+cov_pca_eff_dims
+cov_eig_eff_dims
+cor_eig_eff_dims
+
+cor_pca_max_evolv <- max_evolv(gen_pca$eig[,1])
+cov_pca_max_evolv <- max_evolv(gen_pca2$eig[,1])
+cov_eig_max_evolv <- max_evolv(a_eig$values)
+cor_eig_max_evolv <- max_evolv(d_eig$values)
+cor_pca_max_evolv
+cov_pca_max_evolv
+cov_eig_max_evolv
+cor_eig_max_evolv
 
 ###############################################################################
 # Plot the PCA
