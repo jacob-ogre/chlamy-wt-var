@@ -124,8 +124,8 @@ summary(mod2937)
 ###########################################################################
 # Write results to file
 ###########################################################################
-outf <- paste(base, "extracted_data/GxE_blups_rev.tab", sep="")
+outf <- paste(base, "extracted_data/GxE_blups_mod3.tab", sep="")
 write.table(tab.gxe, outf, sep = "\t", quote=FALSE, row.names=TRUE)
 
-outf <- paste(base, "extracted_data/GxE_blups_rev.tab", sep="")
+outf <- paste(base, "extracted_data/GxE_blups_mod4.tab", sep="")
 write.table(new_gxe, outf, sep = "\t", quote=FALSE, row.names=TRUE)
