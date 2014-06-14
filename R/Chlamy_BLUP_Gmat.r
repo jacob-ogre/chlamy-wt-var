@@ -55,21 +55,52 @@ max_evolv <- function(x) {
 # Load data
 ###########################################################################
 # gcor.dat <- read.table("wt_fitness_maxF_FINAL.tab", sep="\t", header=TRUE)
-base <- "/home/jacob/Dropbox/Chlamy_project/Chlamy_wt_fitness_assays/extracted_data/"
+base <- "/Users/jacobmalcom/Dropbox/Chlamy_project/Chlamy_wt_fitness_assays/extracted_data/"
 dat <- read.table(paste(base, "GxE_blups_mod4_mat.tab", sep=""),
                   sep="\t", header=TRUE)
-head(dat)
-
-# some df management, including remove N++100, which is synonymous with N++
 rownames(dat) <- dat[,1]
 dat <- dat[,-1]
+names(dat)
 dat <- dat[,-7]
+dim(dat)
+
+means <- read.table(paste(base, "Chlamy_wt_max_linemeans.csv", sep=""),
+                      sep=",", header=TRUE)
+keep <- c("1373", "1690", "2246", "2290", "2342", "2343", "2344", "2607",
+          "2608", "2931", "2932", "2935", "2936", "2937", "2938", "4414",
+          "89", "90")
+means <- droplevels(subset(means, means$line %in% keep))
+rownames(means) <- means[,1]
+means <- means[,-1]
+names(means)
+means <- means[,-7]
+dim(means)
+
+###############################################################################
+# plots between line means and blups
+# The G-matrix results are very different between using line means and BLUPs,
+# so I want to see how the values compare to one-another in graphical form
+###############################################################################
+par(mfrow=c(4,8))
+all_blup <- c()
+all_mean <- c()
+for(i in 1:length(dat)) {
+    plot(abs(dat[,i]) ~ means[,i],
+         xlab=paste("Means", names(means)[i], sep=" "),
+         ylab=paste("BLUPs", names(dat)[i], sep=" "))
+    abline(lm(abs(dat[,1]) ~ means[,i]), col="red")
+    all_blup <- c(all_blup, dat[,i])
+    all_mean <- c(all_mean, means[,i])
+}
+
+par(mfrow=c(1,1))
+plot(abs(all_blup) ~ scale(all_mean))
+abline(lm(abs(all_blup) ~ scale(all_mean)))
 
 ###########################################################################
 # PCA of genotypic values
 ###########################################################################
-mean_cent <- (t(dat) - colMeans(t(dat), na.rm=T))
-mean_cent <- mean_cent  / apply(mean_cent, 2, sd, na.rm=T)
+mean_cent <- t(dat)
 cov_dat <- cov(mean_cent, use="pairwise")
 cor_dat <- cor(mean_cent, use="pairwise")
 
@@ -79,6 +110,8 @@ cor_dat_eig <- eigen(cor_dat)
 cor_dat_var <- cor_dat_eig$values / sum(cor_dat_eig$values)
 cov_dat_var
 cor_dat_var
+
+cov_PCA <- PCA(mean_cent, scale.unit=FALSE)
 
 # calculated eff
 cov_eig_eff_dims <- eff_evolv(cov_dat_eig$values)
@@ -92,7 +125,7 @@ cov_eig_max_evolv
 cor_eig_max_evolv
 
 ###########################################################################
-# clustering
+# bootstrap the eigenvalues
 ###########################################################################
 datamat <- scale(dat[,2:length(dat)])
 rownames(datamat) <- gcor.dat[,1]
