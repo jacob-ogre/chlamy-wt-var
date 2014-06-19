@@ -118,9 +118,11 @@ cov_dat_eig_val <- cov_dat_eig$values
 cov_dat_eig_val
 cov_dat_var
 
-cov_PCA <- PCA(mean_cent)
+cov_PCA <- PCA(mean_cent, graph=FALSE)
+plot(cov_PCA, choix="ind", new.plot=FALSE)
+plot(cov_PCA, choix="var", new.plot=FALSE)
 
-# calculated Kirkpatrick metrics
+# calculate Kirkpatrick metrics
 cov_eig_eff_dims <- eff_evolv(cov_dat_eig$values)
 cov_eig_eff_dims
 
