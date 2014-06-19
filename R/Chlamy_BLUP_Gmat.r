@@ -60,7 +60,6 @@ dat <- read.table(paste(base, "GxE_blups_mod4_mat.tab", sep=""),
                   sep="\t", header=TRUE)
 rownames(dat) <- dat[,1]
 dat <- dat[,-1]
-
 names(dat)
 dat <- dat[,-25]
 dat <- dat[,-24]
@@ -79,7 +78,11 @@ means <- droplevels(subset(means, means$line %in% keep))
 rownames(means) <- means[,1]
 means <- means[,-1]
 names(means)
+means <- means[,-25]
+means <- means[,-24]
 means <- means[,-7]
+means <- means[,-4]
+means <- means[,-3]
 dim(means)
 
 ###############################################################################
@@ -87,7 +90,7 @@ dim(means)
 # The G-matrix results are very different between using line means and BLUPs,
 # so I want to see how the values compare to one-another in graphical form
 ###############################################################################
-par(mfrow=c(4,8))
+par(mfrow=c(5,6))
 all_blup <- c()
 all_mean <- c()
 for(i in 1:length(dat)) {
@@ -112,6 +115,7 @@ cov_dat <- cov(mean_cent)
 cov_dat_eig <- eigen(cov_dat)
 cov_dat_var <- cov_dat_eig$values / sum(cov_dat_eig$values)
 cov_dat_eig_val <- cov_dat_eig$values
+cov_dat_eig_val
 cov_dat_var
 
 cov_PCA <- PCA(mean_cent)
@@ -124,6 +128,7 @@ cov_eig_max_evolv <- max_evolv(cov_dat_eig$values)
 cov_eig_max_evolv
 
 cov_tot_gen_var <- sum(cov_dat_eig_val)
+cov_dat_eig_val[1] * cov_eig_eff_dims
 cov_tot_gen_var 
 
 ###########################################################################
@@ -135,17 +140,3 @@ rowSums(boots) / length(boots)
 ###########################################################################
 # Write results
 ###########################################################################
-write.table(line_fold_df,
-            file="wt_fit_var_linewise_fold_differences.tab",
-            sep="\t",
-            eol="\n",
-            row.names=FALSE,
-            quote=FALSE)
-
-write.table(env_fold_df,
-            file="wt_fit_var_envwise_fold_differences.tab",
-            sep="\t",
-            eol="\n",
-            row.names=FALSE,
-            quote=FALSE)
-
