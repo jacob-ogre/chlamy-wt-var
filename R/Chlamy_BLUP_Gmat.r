@@ -15,7 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-library("FactoMineR")
+library(FactoMineR)
+library(gplots)
 # setwd(paste("~/Google Drive/Chlamy_project/Chlamy_wt_fitness_assays/", 
 #             "extracted_data/", sep=""))
 
@@ -156,3 +157,5 @@ biplot(cov_prc,
        ylim=c(-0.5, 0.5),
        xlab="PC1 (27.45%)",
        ylab="PC2 (19.2%)")
+
+heatmap.2(cor(t(mean_cent)), trace="none")
