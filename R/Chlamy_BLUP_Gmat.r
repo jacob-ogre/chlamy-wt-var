@@ -118,10 +118,6 @@ cov_dat_eig_val <- cov_dat_eig$values
 cov_dat_eig_val
 cov_dat_var
 
-cov_PCA <- PCA(mean_cent, graph=FALSE)
-plot(cov_PCA, choix="ind", new.plot=FALSE)
-plot(cov_PCA, choix="var", new.plot=FALSE)
-
 # calculate Kirkpatrick metrics
 cov_eig_eff_dims <- eff_evolv(cov_dat_eig$values)
 cov_eig_eff_dims
@@ -140,5 +136,23 @@ boots <- boot_pca(mean_cent, 9999)
 rowSums(boots) / length(boots)
 
 ###########################################################################
-# Write results
+# Some plotting
 ###########################################################################
+cov_PCA <- PCA(mean_cent, graph=FALSE)
+plot(cov_PCA, choix="ind", new.plot=FALSE)
+plot(cov_PCA, choix="var", new.plot=FALSE)
+
+# The FactoMineR biplots can't be combined, at least not in the way I want,
+# so will use biplot with a prcomp analysis. The numbers are slightly different
+# relative to eigen decomp and FactoMineR (the numbers are the same for these
+# two), but because this is just about visualization, and the relative positions
+# of the genotypes and environments are effectively identical with the exception
+# of a 90 degree rotation, this works.
+cov_prc <- prcomp(mean_cent)
+biplot(cov_prc, 
+       col=c("black", "darkgray"), 
+       cex=0.8, 
+       xlim=c(-0.5, 0.5),
+       ylim=c(-0.5, 0.5),
+       xlab="PC1 (27.45%)",
+       ylab="PC2 (19.2%)")
