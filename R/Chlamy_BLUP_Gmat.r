@@ -19,7 +19,7 @@ library("FactoMineR")
 # setwd(paste("~/Google Drive/Chlamy_project/Chlamy_wt_fitness_assays/", 
 #             "extracted_data/", sep=""))
 
-###########################################################################
+##########################################################################
 # Functions
 ###########################################################################
 boot_pca <- function(mat, reps) {
@@ -60,9 +60,15 @@ dat <- read.table(paste(base, "GxE_blups_mod4_mat.tab", sep=""),
                   sep="\t", header=TRUE)
 rownames(dat) <- dat[,1]
 dat <- dat[,-1]
+
 names(dat)
+dat <- dat[,-25]
+dat <- dat[,-24]
 dat <- dat[,-7]
+dat <- dat[,-4]
+dat <- dat[,-3]
 dim(dat)
+names(dat)
 
 means <- read.table(paste(base, "Chlamy_wt_max_linemeans.csv", sep=""),
                       sep=",", header=TRUE)
@@ -100,39 +106,31 @@ abline(lm(abs(all_blup) ~ scale(all_mean)))
 ###########################################################################
 # PCA of genotypic values
 ###########################################################################
-mean_cent <- t(dat)
-cov_dat <- cov(mean_cent, use="pairwise")
-cor_dat <- cor(mean_cent, use="pairwise")
+mean_cent <- scale(t(dat))
+cov_dat <- cov(mean_cent)
 
 cov_dat_eig <- eigen(cov_dat)
 cov_dat_var <- cov_dat_eig$values / sum(cov_dat_eig$values)
-cor_dat_eig <- eigen(cor_dat)
-cor_dat_var <- cor_dat_eig$values / sum(cor_dat_eig$values)
+cov_dat_eig_val <- cov_dat_eig$values
 cov_dat_var
-cor_dat_var
 
-cov_PCA <- PCA(mean_cent, scale.unit=FALSE)
+cov_PCA <- PCA(mean_cent)
 
-# calculated eff
+# calculated Kirkpatrick metrics
 cov_eig_eff_dims <- eff_evolv(cov_dat_eig$values)
-cor_eig_eff_dims <- eff_evolv(cor_dat_eig$values)
 cov_eig_eff_dims
-cor_eig_eff_dims
 
 cov_eig_max_evolv <- max_evolv(cov_dat_eig$values)
-cor_eig_max_evolv <- max_evolv(cor_dat_eig$values)
 cov_eig_max_evolv
-cor_eig_max_evolv
+
+cov_tot_gen_var <- sum(cov_dat_eig_val)
+cov_tot_gen_var 
 
 ###########################################################################
 # bootstrap the eigenvalues
 ###########################################################################
-datamat <- scale(dat[,2:length(dat)])
-rownames(datamat) <- gcor.dat[,1]
-dist_mat <- dist(datamat, "euclidian")
-fit <- hclust(dist_mat, method="ward")
-
-plot(fit, main="", xlab="", ylab="distance")
+boots <- boot_pca(mean_cent, 9999)
+rowSums(boots) / length(boots)
 
 ###########################################################################
 # Write results

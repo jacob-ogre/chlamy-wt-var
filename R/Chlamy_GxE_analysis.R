@@ -8,7 +8,6 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
-
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -37,6 +36,8 @@ dat <- droplevels(subset(dat, dat$Env != "NULL"))
 dat$Coord <- as.factor(dat$Coord)
 dat$Env <- as.factor(dat$Env)
 
+hist(dat$Fluor)
+
 ###########################################################################
 # Analysis
 ###########################################################################
@@ -49,6 +50,8 @@ fit.3 <- lmer(dat$Fluor ~ 1 + dat$Env + (1|dat$Line) + (1|dat$Line:dat$Env))
 # add plate coords for update:
 fit_4 <- lmer(dat$Fluor ~ 1 + dat$Env + (1|dat$Coord) + (1|dat$Line) + 
               (1|dat$Line:dat$Env))
+resid_4 <- resid(fit_4)
+hist(resid_4)
 
 fit_aov <- anova(fit.1, fit.2, fit.3, fit_4)
 fit_aov
