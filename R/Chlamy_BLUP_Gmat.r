@@ -130,6 +130,20 @@ cov_tot_gen_var <- sum(cov_dat_eig_val)
 cov_dat_eig_val[1] * cov_eig_eff_dims
 cov_tot_gen_var 
 
+
+###########################################################################
+# factor analysis of genotypic values
+###########################################################################
+fac_1 <- fa(t(dat), covar=TRUE, nfactors=1)
+fac_2 <- fa(t(dat), covar=TRUE, nfactors=2)
+fac_3 <- fa(t(dat), covar=TRUE, nfactors=3)
+fac_4 <- fa(t(dat), covar=TRUE, nfactors=4)
+
+fac_1$BIC
+fac_2$BIC
+fac_3$BIC
+fac_4$BIC
+
 ###########################################################################
 # bootstrap the eigenvalues
 ###########################################################################
